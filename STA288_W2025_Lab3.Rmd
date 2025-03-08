@@ -26,7 +26,7 @@ Note: this is the same paper considered in the Practice Midterm!
 
 The COVID-19 Screening Assessment for Exposure Trial (COVID SAFE) was conducted at the University of Pennsylvania in Fall 2020 to compare opt-in and opt-out recruitment strategies for a COVID-19 surveillance program (Oakes et al., 2021).
 
-The dataset containing information on the participants was published with the paper. Thus, we will not be able to read in data for Lab 3 Assignment. Even though we do not have tidy data pertaining to each of the 1759 participants in this study, we can still perform analyses and create visualizations based on the counts presented in Tables 1 and 2. 
+The dataset containing information on the participants was not published with the paper. Thus, we will not be able to read in data for Lab 3 Assignment. Even though we do not have tidy data pertaining to each of the 1759 participants in this study, we can still perform analyses and create visualizations based on the counts presented in Tables 1 and 2. 
 
 
 ```{r setup, include=FALSE}
