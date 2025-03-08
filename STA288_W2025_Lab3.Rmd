@@ -1,0 +1,197 @@
+---
+title: "STA288 Lab 3 Assignment - Inference on Proportions using Mathematical Models
+  (WINTER 2025)"
+author: "TYPE YOUR *NAME* HERE (type your *STUDENT NUMBER* & *LEC section* here)"
+date: "2025-03-13"
+output:
+  pdf_document: default
+  word_document: default
+---
+## Lab 3 Assignment (both .Rmd & .pdf) - Due 11:59pm Thurs Mar 13, on Quercus
+## Direct link to assignment dropbox - https://q.utoronto.ca/courses/380331/assignments/1436695
+## Graded out of **20 marks**
+
+## We strongly recommend you review the R code used in LearnR Modules 1, 2 & 3 and the R code that was introduced in Weeks 7 & 8 lecture videos  **before** attempting this lab assignment so you will be familiar with R code that will be useful for this assignment.*
+## Note that late assignments and assignments submitted other ways (e.g., over email) will not be accepted. If you have trouble knitting your assignment, submit your completed Rmd on its own through Quercus by the deadline so you can earn partial credit toward this assignment.
+
+This is an R Markdown document. Markdown is a syntax for authoring documents that are a mix of text and R code and output. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button above, a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. When you submit lab assignments in STA288, you will need to submit this R Markdown (.Rmd) file AND the pdf file you generate by clicking on **Knit > Knit to PDF** above (save that file as STA288Lab3yourname.pdf). To save on your own machine to upload to Quercus, check the boxes next to the two files in the files tab on the right, then click **More > Export** and download to your own machine.
+
+In this lab, you will summarize, analyze and interpret some data on the individuals who participated in the study described in the following paper:
+
+Oakes AH, Epstein JA, Ganguly A, Park S, Evans CN, Patel MS. (2021) Effect of opt-in vs opt-out framing on enrollment in a COVID-19 surveillance testing program: The COVID SAFE randomized clinical trial. JAMA Network Open, 4(6), e2112434-e2112434.
+
+Note: this is the same paper considered in the Practice Midterm! 
+
+The COVID-19 Screening Assessment for Exposure Trial (COVID SAFE) was conducted at the University of Pennsylvania in Fall 2020 to compare opt-in and opt-out recruitment strategies for a COVID-19 surveillance program (Oakes et al., 2021).
+
+The dataset containing information on the participants was published with the paper. Thus, we will not be able to read in data for Lab 3 Assignment. Even though we do not have tidy data pertaining to each of the 1759 participants in this study, we can still perform analyses and create visualizations based on the counts presented in Tables 1 and 2. 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Do not remove this box. Make sure you run it (click triangle on top right of this box) 
+# before trying to write and run later code in your rmd file.
+# If you need to import any libraries, add them here. 
+
+library(tidyverse)
+library(mosaic)
+
+```
+
+\newpage
+
+The primary outcomes of interest were 1) the proportion of participants who enrolled in the trial within 4 weeks of invitation and 2) whether or not those who enroll in the trial follow through with the first COVID-19 screening test. 
+
+The researchers of this study included, among other characteristics, each participant's age, sex, and race/ethnicity. Refer to Table 1: Participant Characteristics on page 2 of Oakes et al. (2021) for a summary of the characteristics of the study participants. These characteristics were included to share characteristics of participants, and to compare across opt-in and opt-out recruitment groups. 
+
+In this Lab Assignment, we will work with Tables 1 and 2 from Oakes et al. (2021).
+
+Because we are not given the data in a tidy format in this study, we first have to create it based on the information we are given in Oakes et al. (2021). The following code builds a tidy data set for the data summarized in Table 1 for the 1759 participants, recording their sex (M, F), recruitment strategy (opt-in, opt-out) and whether or not they enrolled in the trial (yes, no).
+```{r}
+# Do not edit this box. Make sure you run it (click triangle on top right of this box)
+# before trying to write and run later code in your rmd file.
+
+
+# Using the information in table 1, we know
+# 107 of the 566 males invited to enrol via opt-in recruitment enrolled in the study 
+# 75 of the 268 males invited to enrol via opt-out recruitment enrolled in the study
+# 149 of the 557 females invited to enrol via opt-in recruitment enrolled in the study
+# 81 of the 294 females invited to enrol via opt-out recruitment enrolled in the study
+# The others didn't enrol in the study
+
+# Let's systematically build each variable, entering individuals in each category in
+# the same positions.
+
+# Build vector for sex variable:
+sex<-c(rep("M",566+268),rep("F",557+294)) 
+# Build vector for recruitment strategy variable:
+recruit<-c(rep("opt-in",566),rep("opt-out",268),
+           rep("opt-in",557),rep("opt-out",294)) 
+# Build vector for enrolment status variable:
+enrol<-c(rep("yes",107), rep("no",566-107),
+         rep("yes",75),rep("no",268-75),
+         rep("yes",149),rep("no",557-149),
+         rep("yes",81),rep("no",294-81)) 
+
+# Combine variables to create tidy data frame:
+lab3table1dat<-data.frame(cbind(sex,recruit,enrol))
+
+# Confirm this worked as expected:
+
+lab3table1dat %>% 
+  group_by_all() %>% 
+  count()
+
+glimpse(lab3table1dat)
+
+
+```
+Note that there appears to be missing values for sex among those "Invited" to the trial since the counts of males and females invited add up to 1685 rather than the reported n of 1759 at the top of Table 1 (Oakes et al., 2021).
+
+
+## QUESTION 1 [10 marks total]
+
+We are interested in comparing trial enrollment rates between men and women who were recruited using an opt-in recruitment strategy.
+
+
+**a.** *(2 marks)*  Choose the *most* appropriate graphical summary to describe the association between *Sex* and *Enrolment*, for the individuals who were recruited using an *Opt-In* strategy? Briefly justify your choice(s).  
+
+*1a ANSWER*: 
+
+
+
+**b.** *(2 marks)* Use R to produce the summary you selected in *Question 1a* and interpret it in the context of this study.  
+
+```{r}
+
+
+```
+
+*1b INTERPRETATION*: 
+
+
+
+**c.** *(3 marks)* We are interested in the difference in enrollment rates between Males and Females, for those who were recruited using an Opt-In strategy. Is an *approximate Z Confidence Interval for $p_1-p_2$* appropriate for this data? *State* and *assess* *all* conditions of this procedure. If this is not an appropriate procedure, propose an alternative procedure and explain why it is appropriate.
+
+*1c ANSWER*: 
+
+
+
+**d.** *(3 marks)* 
+*(i)* Using a 99% confidence level, compute an appropriate interval estimate using the procedure in *Question 1c*.
+*(ii)* Interpret your confidence interval in the context of the study.
+
+*1d(i) ANSWER*: 
+```{r}
+
+
+```
+
+*1d(ii) ANSWER*: 
+
+
+\newpage
+
+## QUESTION 2 [10 marks total]
+
+
+Oakes et al. (2021). studied whether or not those who enroll in the trial follow through with the first COVID-19 screening test.
+
+**a.**	*(2 marks)* 
+
+Table 2 (Trial Outcomes) of Oakes et al. (2021) summarizes the results of their analysis. Using the information from Table 2, create a tidy dataset containing information about Recruitment strategy (opt-in, opt-out) and Completion of First Test (yes, no) for all enrolled participants. HINT: Copy and paste the code from lines 58-79 (code used to build a tidy dataset for some variables summarized in Table 1) to the R chunk below; then modify it. Your dataframe should have 412 rows, and 2 columns. Be sure to give the dataset you create a meaningful name that describes the data it contains. 
+
+After building this tidy dataset, produce a summary for your dataset that lists how many participants there are that correspond with each combination of Recruitment and Completion of First Test. 
+
+*2a ANSWER*: 
+```{r}
+
+
+```
+
+
+**b.** *(2 marks)*	
+We are interested in exploring an association between Recruitment Strategy and Completion of First Test for each participant. State the null and alternative hypotheses for the hypothesis test that the authors conducted to obtain the p-value in Table 2 when they conducted a hypothesis test on an association between Recruitment and Completion of First Test. Define any notation you use in the context of the study.
+
+*2b ANSWER*: 
+
+
+
+**c.** *(2 marks)* Is an approximate Z test an appropriate way to test the hypothesis in Question 2b for these data? *State* and *assess *all* conditions of this procedure. If this is not an appropriate procedure, propose an alternative procedure, and explain why it is appropriate.
+
+*2c ANSWER*: 
+
+
+**d.** *(3 marks)* Regardless of your answer to *Question 2c*: 
+*(i)* Use R to conduct the relevant approximate Z test to test the hypothesis in *Question 2b* based on these data and report the test statistic and p-value. Note: To disable the continuity correction applied by default, add the argument *correct=FALSE* to the function.  
+*(ii)* Interpret these hypothesis test results in the context of the study.
+
+*2di ANSWER*:
+```{r}
+
+
+```
+
+*2dii ANSWER*:
+
+
+
+**e.** *(1 mark)*
+Compare the p-value you obtained in *Question 2d* to the p-value for the test Oakes et al. (2021) conducted on this association. Do the p-values match? If not, what would explain the difference?
+
+*2e ANSWER*: 
+
+
+
+__________________________________________________________________________
+THIS IS THE END OF LAB ASSIGNMENT 3
+```{r echo = FALSE}
+# for grader use only (do not remove or edit this box)
+runif(1,0,1)
+date()
+```
+
+
